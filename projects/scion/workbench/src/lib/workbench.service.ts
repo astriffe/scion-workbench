@@ -69,8 +69,9 @@ export class InternalWorkbenchService implements WorkbenchService {
 
   public destroyView(...viewRefs: string[]): Promise<boolean> {
     const destroyViewFn = (viewRef: string): Promise<boolean> => {
+      const viewToActivate = this.resolveViewPartServiceElseThrow(viewRef).getViewToActivateElseNull(viewRef);
       const serializedGrid = this._viewPartGridUrlObserver.snapshot
-        .removeView(viewRef)
+        .removeView(viewRef, viewToActivate)
         .serialize();
       return this._router.navigate([{outlets: {[viewRef]: null}}], {
         queryParams: {[VIEW_GRID_QUERY_PARAM]: serializedGrid},

@@ -48,7 +48,7 @@ export class ViewPartGrid {
    * Removes a view and activates the preceding view.
    * In case the view was the last view of the viewpart, the viewpart is removed as well.
    */
-  public removeView(viewRef: string): this {
+  public removeView(viewRef: string, viewToActivateRef: string): this {
     const viewPartRef = this.findContainingViewPartElseThrow(viewRef);
     const viewPartInfoArray = this.getViewPartElseThrow(viewPartRef).viewPartInfoArray;
 
@@ -64,7 +64,13 @@ export class ViewPartGrid {
     if (viewPartInfoArray[ACTIVE_VIEW_REF_INDEX] === viewRef) {
       viewPartInfoArray[ACTIVE_VIEW_REF_INDEX] = null;
 
-      if (viewPartInfoArray.length > VIEW_REFS_START_INDEX) {
+      if (viewToActivateRef) {
+        const viewToActivateIndex = viewPartInfoArray.indexOf(viewToActivateRef, VIEW_REFS_START_INDEX);
+        if (viewToActivateIndex === -1) {
+          throw Error(`Illegal argument. View to activate not found in viewpart [viewPartRef=${viewPartRef}, viewRef=${viewToActivateRef}]`);
+        }
+        viewPartInfoArray[ACTIVE_VIEW_REF_INDEX] = viewPartInfoArray[viewToActivateIndex];
+      } else if (viewPartInfoArray.length > VIEW_REFS_START_INDEX) {
         viewPartInfoArray[ACTIVE_VIEW_REF_INDEX] = viewPartInfoArray[viewIndex] || viewPartInfoArray[viewIndex - 1];
       }
     }

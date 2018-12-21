@@ -24,6 +24,7 @@ export class WorkbenchViewPartService implements OnDestroy {
   private _destroy$ = new Subject<void>();
   private _hiddenViewTabs = new Set<string>();
   private _hiddenViewTabs$ = new BehaviorSubject<string[]>([]);
+  private _history: string[] = [];
 
   constructor(private _workbench: InternalWorkbenchService,
               private _viewRegistry: WorkbenchViewRegistry,
@@ -106,6 +107,7 @@ export class WorkbenchViewPartService implements OnDestroy {
       return Promise.resolve(true);
     }
 
+    this.updateHistory(viewRef);
     const serializedGrid = this._viewPartGridUrlObserver.snapshot
       .activateView(this._viewPart.viewPartRef, viewRef)
       .serialize();
@@ -120,9 +122,11 @@ export class WorkbenchViewPartService implements OnDestroy {
    */
   public moveViewToThisViewPart(viewRef: string): Promise<boolean> {
     const grid = this._viewPartGridUrlObserver.snapshot;
+    const viewToActivate = this._workbench.activeViewPartService.getViewToActivateElseNull(viewRef);
+    this.updateHistory(viewRef);
 
     const serializedGrid = grid
-      .removeView(viewRef)
+      .removeView(viewRef, viewToActivate)
       .addView(this._viewPart.viewPartRef, viewRef)
       .serialize();
 
@@ -138,10 +142,11 @@ export class WorkbenchViewPartService implements OnDestroy {
   public moveViewToNewViewPart(viewRef: string, region: Region): Promise<boolean> {
     const grid = this._viewPartGridUrlObserver.snapshot;
     const newViewPartRef = grid.computeNextViewPartIdentity();
+    const viewToActivate = this._workbench.activeViewPartService.getViewToActivateElseNull(viewRef);
 
     const serializedGrid = grid
       .addSiblingViewPart(region, this._viewPart.viewPartRef, newViewPartRef)
-      .removeView(viewRef)
+      .removeView(viewRef, viewToActivate)
       .addView(newViewPartRef, viewRef)
       .serialize();
 
@@ -172,6 +177,33 @@ export class WorkbenchViewPartService implements OnDestroy {
 
   public get hiddenViewTabs$(): Observable<string[]> {
     return this._hiddenViewTabs$.asObservable();
+  }
+
+  /**
+   * Returns the view to activate or null if the given view is not active
+   */
+  public getViewToActivateElseNull(viewRef: string): string {
+    if (this.activeViewRef === viewRef) {
+      return this._history.pop();
+    }
+    this.removeFromHistory(viewRef);
+    return null;
+  }
+
+  public addActiveViewToHistory(): void {
+    this._history.push(this.activeViewRef);
+  }
+
+  private updateHistory(viewRef: string): void {
+    this.removeFromHistory(viewRef);
+    this.addActiveViewToHistory();
+  }
+
+  private removeFromHistory(viewRef: string): void {
+    const index = this._history.indexOf(viewRef);
+    if (index !== -1) {
+      this._history.splice(index, 1);
+    }
   }
 
   /**
