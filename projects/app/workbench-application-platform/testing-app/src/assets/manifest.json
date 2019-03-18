@@ -362,6 +362,32 @@
       }
     },
     {
+      "type": "action",
+      "properties": {
+        "location": "view-part",
+        "title": "c91805e8-view",
+        "cssClass": [
+          "e2e-c91805e8-view",
+          "fab",
+          "fa-android"
+        ],
+        "text": "",
+        "align": "start",
+        "intent": {
+          "type": "view",
+          "qualifier": {
+            "entity": "testing",
+            "testcase": "c91805e8-view"
+          },
+          "properties": {
+            "activateIfPresent": false,
+            "closeIfPresent": false,
+            "target": "blank"
+          }
+        }
+      }
+    },
+    {
       "type": "view",
       "qualifier": {
         "entity": "testing",

@@ -13,6 +13,7 @@
  */
 export * from './lib/core.model';
 export * from './lib/view.model';
+export * from './lib/action.model';
 export * from './lib/activity.model';
 export * from './lib/popup.model';
 export * from './lib/messagebox.model';

@@ -25,6 +25,10 @@ export enum PlatformCapabilityTypes {
    */
   Activity = 'activity',
   /**
+   * Shows an action at a specified location to fire an intent.
+   */
+  Action = 'action',
+  /**
    * Displays a message box.
    */
   MessageBox = 'messagebox',

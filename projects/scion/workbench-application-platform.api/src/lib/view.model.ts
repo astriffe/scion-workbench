@@ -71,30 +71,30 @@ export interface ViewCapability extends Capability {
       /**
        * Specifies the title of the activity.
        */
-      title: string;
+      title?: string;
 
       /**
        * Specifies CSS class(es) added to the activity item and activity panel, e.g. used for e2e testing.
        */
-      cssClass: string | string[];
+      cssClass?: string | string[];
 
       /**
        * Specifies the text for the activity item.
        *
        * You can use it in combination with `itemCssClass`, e.g. to render an icon glyph by using its textual name.
        */
-      itemText: string;
+      itemText?: string;
 
       /**
        * Specifies CSS class(es) added to the activity item, e.g. used for e2e testing or to set an icon font class.
        */
-      itemCssClass: string | string[];
+      itemCssClass?: string | string[];
 
       /**
        * Specifies where to insert this item in the list of activities.
        */
-      position: number;
-    }
+      position?: number;
+    };
   };
 }
 
@@ -171,44 +171,45 @@ export interface ViewProperties {
   useDestroyNotifier?: boolean;
 }
 
+export interface ViewIntentPayload {
+  /**
+   * Specifies optional query parameters to open the view.
+   */
+  queryParams?: {
+    [key: string]: string;
+  };
+  /**
+   * Specifies optional matrix parameters to open the view.
+   *
+   * Matrix parameters can be used to associate optional data with the URL and are like regular URL parameters,
+   * but do not affect route resolution.
+   */
+  matrixParams?: {
+    [key: string]: any;
+  };
+  /**
+   * Activates the view if it is already present.
+   * If not present, the view is opened according to the specified 'target' strategy.
+   */
+  activateIfPresent?: boolean;
+  /**
+   * Closes the view if present. Has no effect if no view is present which matches the qualifier.
+   */
+  closeIfPresent?: boolean;
+  /**
+   * Controls where to open the view.
+   *
+   * 'blank': opens the view as a new workbench view (which is by default)
+   * 'self':  opens the view in the current workbench view
+   */
+  target?: 'blank' | 'self';
+}
+
 /**
  * Intent message to navigate to a view.
  */
-export interface ViewIntentMessage extends IntentMessage {
+export interface ViewIntentMessage extends IntentMessage, ViewIntentPayload {
 
   type: PlatformCapabilityTypes.View;
-
-  payload: {
-    /**
-     * Specifies optional query parameters to open the view.
-     */
-    queryParams?: {
-      [key: string]: string;
-    };
-    /**
-     * Specifies optional matrix parameters to open the view.
-     *
-     * Matrix parameters can be used to associate optional data with the URL and are like regular URL parameters,
-     * but do not affect route resolution.
-     */
-    matrixParams?: {
-      [key: string]: any;
-    };
-    /**
-     * Activates the view if it is already present.
-     * If not present, the view is opened according to the specified 'target' strategy.
-     */
-    activateIfPresent?: boolean;
-    /**
-     * Closes the view if present. Has no effect if no view is present which matches the qualifier.
-     */
-    closeIfPresent?: boolean;
-    /**
-     * Controls where to open the view.
-     *
-     * 'blank': opens the view as a new workbench view (which is by default)
-     * 'self':  opens the view in the current workbench view
-     */
-    target?: 'blank' | 'self';
-  };
+  payload: ViewIntentPayload;
 }

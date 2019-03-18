@@ -1,0 +1,6 @@
+<a href=""
+   (click)="onClick($event)"
+   [ngClass]="actionCapability.properties.cssClass"
+   [attr.title]="actionCapability.properties.title">
+  {{actionCapability.properties.text || ''}}
+</a>

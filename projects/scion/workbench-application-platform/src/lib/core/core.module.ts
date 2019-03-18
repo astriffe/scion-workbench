@@ -17,6 +17,7 @@ import { Logger } from './logger.service';
 import { MessageBus } from './message-bus.service';
 import { IntentHandlerRegistrator } from './intent-handler-registrator.service';
 import { AppOutletDirective } from './app-outlet.directive';
+import { InitializerService } from './initializer.service';
 
 /**
  * Core functionality of workbench application platform.
@@ -38,6 +39,7 @@ import { AppOutletDirective } from './app-outlet.directive';
     ManifestRegistry,
     MessageBus,
     IntentHandlerRegistrator,
+    InitializerService,
     {
       provide: APP_INITIALIZER,
       multi: true,
@@ -54,6 +56,7 @@ export function provideModuleInitializerFn(injector: Injector, logger: Logger): 
   // do not return the function directly to not break the AOT build (add redundant assignment)
   const fn = (): Promise<void> => {
     return injector.get(ManifestCollector).collectAndRegister()
+      .then(() => injector.get(InitializerService).initialize())
       .then(() => injector.get(IntentHandlerRegistrator).initializeHandlers())
       .catch(error => logger.error('Workbench Application Platform failed to initialize', error));
   };

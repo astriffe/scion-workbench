@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
  * DI injection token to register a class to handle intents of some type and qualifier.
  */
 export const INTENT_HANDLER = new InjectionToken<IntentHandler[]>('INTENT_HANDLER');
+export const INITIALIZER = new InjectionToken<Initializer[]>('INITIALIZER');
 
 /**
  * Symbolic name of the host application.
@@ -144,6 +145,10 @@ export interface IntentHandler {
    * Method invoked upon the receipt of an intent which this handler qualifies to receive.
    */
   onIntent(envelope: MessageEnvelope<IntentMessage>): void;
+}
+
+export interface Initializer {
+  onInit(): void;
 }
 
 /**

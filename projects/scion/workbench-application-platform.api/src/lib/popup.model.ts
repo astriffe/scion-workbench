@@ -72,49 +72,49 @@ export enum PopupHostMessageTypes {
   Close = 'popup-close',
 }
 
+export interface PopupIntentPayload {
+  /**
+   * Specifies optional query parameters to open the popup.
+   */
+  queryParams?: Params;
+  /**
+   * Specifies optional matrix parameters to open the popup.
+   *
+   * Matrix parameters can be used to associate optional data with the URL and are like regular URL parameters,
+   * but do not affect route resolution.
+   */
+  matrixParams?: Params;
+  /**
+   * Specifies the bounding box of the anchor where to attach the popup.
+   */
+  anchor: ClientRect;
+  /**
+   * Specifies in which region of the popup anchor to show the popup (unless not enough space).
+   */
+  position?: 'east' | 'west' | 'north' | 'south';
+  /**
+   * Controls when to close the popup. By default, the popup closes on focus lost and escape keystroke.
+   */
+  closeStrategy?: {
+    /**
+     * Specifies if to close the popup on focus lost, which is `true` by default.
+     */
+    onFocusLost?: boolean;
+    /**
+     * Specifies if to close the popup on escape keystroke, which is `true` by default.
+     */
+    onEscape?: boolean;
+    /**
+     * Specifies if to close the popup on workbench view grid change, which is `true` by default.
+     */
+    onGridLayoutChange?: boolean;
+  };
+}
+
 /**
  * Intent message to show a popup.
  */
 export interface PopupIntentMessage extends IntentMessage {
-
   type: PlatformCapabilityTypes.Popup;
-
-  payload: {
-    /**
-     * Specifies optional query parameters to open the popup.
-     */
-    queryParams?: Params;
-    /**
-     * Specifies optional matrix parameters to open the popup.
-     *
-     * Matrix parameters can be used to associate optional data with the URL and are like regular URL parameters,
-     * but do not affect route resolution.
-     */
-    matrixParams?: Params;
-    /**
-     * Specifies the bounding box of the anchor where to attach the popup.
-     */
-    anchor: ClientRect;
-    /**
-     * Specifies in which region of the popup anchor to show the popup (unless not enough space).
-     */
-    position?: 'east' | 'west' | 'north' | 'south';
-    /**
-     * Controls when to close the popup. By default, the popup closes on focus lost and escape keystroke.
-     */
-    closeStrategy?: {
-      /**
-       * Specifies if to close the popup on focus lost, which is `true` by default.
-       */
-      onFocusLost?: boolean;
-      /**
-       * Specifies if to close the popup on escape keystroke, which is `true` by default.
-       */
-      onEscape?: boolean;
-      /**
-       * Specifies if to close the popup on workbench view grid change, which is `true` by default.
-       */
-      onGridLayoutChange?: boolean;
-    }
-  };
+  payload: PopupIntentPayload;
 }
