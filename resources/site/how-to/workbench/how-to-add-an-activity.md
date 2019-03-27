@@ -30,8 +30,8 @@ The following snippet illustrates how to open the component as a view.
 <wb-workbench>
   <wb-activity title="Persons"
                itemText="group"
-               cssClass="material-icons"
-               itemCssClass="persons"
+               itemCssClass="material-icons"
+               routerLink="persons"
                target="view">
   </wb-activity>
 </wb-workbench>
